@@ -21,13 +21,13 @@ Each folder contains the script to execute the following analyses:
 
 - **01_construct_PGS:** Contains the pipeline to split samples into a training and testing set (`01_sample_split`). The training set is used to run genome-wide association studies (`02_GWAS`), whose summary statistics were used to develop polygenic scores (`03_PGS_development`). Finally, PGS weights were applied to the testing set and PGS performance was assessed (`04_PGS_application`).
 
-- **02_model_phenotype:** The impact 
+- **02_model_phenotype:** Contains the scripts to model the individual, joint, and synergistic contribution of CNVs and PGS to phenotypic variability (`01_CNV`), as well as the contribution of the CNV (`02_CNV_burden`) and the pLoF (`03_pLoF`) burden to phenotypic variability.
   
-- **03_model_PGS:**
+- **03_model_PGS:** Contains the scripts to model the contribution of CNVs and other rare variants to variability in the genome-wide (`01_PGS_GW`) and local (`02_PGS_cis`) PGSs. The former folder is further subdivided to assess the role of individual CNVs (`01_CNV`), the CNV burden (`02_CNV_burden`), and the pLoF burden (`03_pLoF`) to variability in PGS<sub>GW</sub>.   
 
-- **04_model_assortative_mating:**
+- **04_model_assortative_mating:** TO ADD.
 
-- **05_inheritance_rate:**
+- **05_inheritance_rate:** TO ADD.
 
 
 ## Data availability: 
