@@ -25,9 +25,9 @@ Each folder contains the script to execute the following analyses:
   
 - **03_model_PGS:** Contains the scripts to model the contribution of CNVs and other rare variants to variability in the genome-wide (`01_PGS_GW`) and local (`02_PGS_cis`) PGSs. The former folder is further subdivided to assess the role of individual CNVs (`01_CNV`), the CNV burden (`02_CNV_burden`), and the pLoF burden (`03_pLoF`) to variability in PGS<sub>GW</sub>.   
 
-- **04_model_assortative_mating:** TO ADD.
+- **04_model_assortative_mating:** Contains the scripts to measure within-couple same-trait and cross-trait correlations (on the full white British set and on the test set) (`01_trait_correlation`), and the assortative mating modelling for CNV-trait pairs and CNV burden (including and excluding couples from the estimation of alpha (CNV-phenotype correlation), gamma (PGS-phenotype correlation) and the total CNV-PGS correlation) (`02_AM_model`).
 
-- **05_inheritance_rate:** TO ADD.
+- **05_inheritance_rate:** Contains the scripts to infer deletion and duplication inheritance rates from IBD and CNV sharing (`01_CNV_inheritance`).
 
 
 ## Data availability: 
