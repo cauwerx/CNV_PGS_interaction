@@ -25,7 +25,7 @@ HOME_DIR = "/mnt/project/penetrance_at_scale/"
 sample_eid = pd.read_csv("/mnt/project/Bulk/Genotype Results/Genotype calls/ukb22418_c1_b0_v2.fam", sep=' ', usecols=[0,4], header = None, names=["eid", "sex"])
 
 # sample_QC: this corresponds to the "ukb_sqc_v2.txt" file 
-# Get column names obtained in 0_sampleQC_colnames.R script
+# Get column names obtained in 00.sampleQC_colnames.R script
 f = open(HOME_DIR + "/data/helper_files/ukb_sqc_v2.HEADER.txt")
 col_names = f.read().splitlines() 
 # Load the QC file
@@ -94,14 +94,14 @@ def get_CNV_carriers(chrom, position, cnv): #cnv is ukb_cnv_global.gz
     hq_dup_carriers=list(set(cnv.query('Quality_Score> 0.5 & Chromosome==@chrom & Start_Position_bp<=@position & End_Position_bp>=@position')['IID']))
     
     # Low-quality (0.2<abs(QS)<=0.5) 
-    # low quality DEL carriers
+    # Low quality DEL carriers
     lq_del_carriers=list(set(cnv.query('Quality_Score<-0.2 & Quality_Score>=-0.5 & Chromosome==@chrom & Start_Position_bp<=@position & End_Position_bp>=@position')['IID']))
-    # low quality DUP carriers
+    # Low quality DUP carriers
     lq_dup_carriers=list(set(cnv.query('Quality_Score> 0.2 & Quality_Score<= 0.5 & Chromosome==@chrom & Start_Position_bp<=@position & End_Position_bp>=@position')['IID']))
     
     return(hq_del_carriers, hq_dup_carriers, lq_del_carriers, lq_dup_carriers)
 
-# Save high-quality phenotype-assocaited CNV carriers
+# Save high-quality phenotype-associated CNV carriers
 CNV_carriers = []
 LQ_CNV_carriers = []
 for i, row in CNVR.iterrows():
@@ -196,7 +196,7 @@ all_carriers = all_carriers.difference(test_exclusion_lst)
 print("Number of non-related WB all carriers:", len(all_carriers))
 
 ################################################################################
-# STEP 5: Removing carriers and their relatives from training set
+# STEP 5: Defining non-carrier training set
 ################################################################################
 
 # Select white-british individuals
@@ -225,7 +225,7 @@ print("Number of non-carrier individuals, not related to carriers:", len(train_I
 # STEP 6: Dividing non-carrier set into training set and control set
 ################################################################################
 
-# Load birth_year info
+# Load birth_year info obtained in 01.get_age.py script
 age_df = pd.read_parquet(HOME_DIR + '/data/pheno/age.all.parquet', engine='pyarrow')
 # Get birth_year and sex for WB individuals
 train_merged = pd.merge(age_df[['IID','birth_year']], WB_cohort[['eid','sex']], how='inner', left_on='IID', right_on='eid')
