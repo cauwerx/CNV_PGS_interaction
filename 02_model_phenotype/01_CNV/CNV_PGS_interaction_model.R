@@ -20,10 +20,6 @@ test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 # File with the following columns: PHENO, CHR, CNVR_START, CNVR_STOP, TOP_MODEL, CB (cytogenic band)
 cnv_signals <- as.data.frame(fread("CNV_PGS/data/cnv_signals.txt"))
 
-# Phenotypic variability explained by the PGS
-# File with the following columns:  PHENO, cor_2 (squared correlation between phenotype and PGS)
-cor2 <- as.data.frame(fread("CNV_PGS/data/phenotype_explained_by_PGS.txt"))
-
 # Phenotype (covariate-corrected + INT; filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per phenotype, containing covariate-adjusted, inverse-normal transformed phenotype values 
 pheno <- as.data.frame(fread("CNV_PGS/data/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.txt"))
@@ -47,8 +43,8 @@ cnvs <- as.data.frame(cnvs[cnvs$IID %in% test_samples$IID, ])
 ########################################################
 
 # Create a dataframe to store results
-df <- right_join(cor2, cnv_signals, by = "PHENO")
-rm(cor2)
+df <- cnv_signals
+rm(cnv_signals)
 
 # Loop over CNV-trait pairs
 for (i in 1:nrow(df)) {
