@@ -76,14 +76,10 @@ rm(type, p, df_temp, fit)
 
 # Among all CNV-trait pairs
 nrow(df[which((df$EFFECT_CNV_BURDEN > 0 & df$EFFECT_CNV_BURDEN_on_PGS_GW > 0) | (df$EFFECT_CNV_BURDEN < 0 & df$EFFECT_CNV_BURDEN_on_PGS_GW < 0)), ])
-# 18 are directionally concordant
-binom.test(18,21,0.5, alternative = "greater")
 
 # Among nominally significant 
 df_nom <- df[which(df$P_CNV_BURDEN_on_PGS_GW <= 0.05), ]
 nrow(df_nom[which((df_nom$EFFECT_CNV_BURDEN > 0 & df_nom$EFFECT_CNV_BURDEN_on_PGS_GW > 0) | (df_nom$EFFECT_CNV_BURDEN < 0 & df_nom$EFFECT_CNV_BURDEN_on_PGS_GW < 0)), ])
-# All 4 are directionally concordant
-binom.test(4,4,0.5, alternative = "greater")
 
 
 ########################################################
