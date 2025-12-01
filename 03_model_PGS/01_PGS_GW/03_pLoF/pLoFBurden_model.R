@@ -13,7 +13,7 @@ library(tidyr)
 ########################################################
 
 # Testing samples; 
-# File with a single column (IID) containing the sample identifier for all samples in the test set. 
+# File with a single column (IID) containing the sample identifier for all samples in the test set
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
 # Phenotypic variability explained by the PGS
