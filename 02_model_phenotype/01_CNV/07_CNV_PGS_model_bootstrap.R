@@ -1,7 +1,6 @@
 # Model adjusted phenotypes according to CNV status VS according to CNV status and PGS for 119 CNV-trait pairs
 # Correlation between the CNV effects from the two fitted models is estimated through bootstrap
 
-
 ########################################################
 # Libraries
 ########################################################
@@ -16,17 +15,13 @@ library(purrr)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
-# File with a single column (IID) containing the sample identifier for all samples in the test set. 
+# Testing samples
+# File with a single column (IID) containing the sample identifier for all samples in the test set
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
 # CNV signals
 # File with the following columns: PHENO, CHR, CNVR_START, CNVR_STOP, TOP_MODEL, CB (cytogenic band)
 cnv_signals <- as.data.frame(fread("CNV_PGS/data/cnv_signals.txt"))
-
-# Phenotypic variability explained by the PGS
-# File with the following columns:  PHENO, cor_2 (squared correlation between phenotype and PGS)
-cor2 <- as.data.frame(fread("CNV_PGS/data/phenotype_explained_by_PGS.txt"))
 
 # Phenotype (covariate-corrected + INT; filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per phenotype, containing covariate-adjusted, inverse-normal transformed phenotype values 
@@ -50,9 +45,9 @@ cnvs <- as.data.frame(cnvs[cnvs$IID %in% test_samples$IID, ])
 # STEP 2: Regression analysis
 ########################################################
 
-# Create a dataframe to store resgression results
-df <- right_join(cor2, cnv_signals, by = "PHENO")
-rm(cor2)
+# Create a dataframe to store results
+df <- cnv_signals
+rm(cnv_signals)
 
 # Set parameters
 set.seed(678)
@@ -76,7 +71,7 @@ for (i in 1:nrow(df)) {
   # Identify samples carrying relevant CNVs (overlapping the lead probe)
   df_cnvs <- cnvs[which(cnvs$Chromosome == chr & cnvs$Start_Position_bp <= pos & cnvs$End_Position_bp >= pos), ]
   
-  # Identify high confidence deletion and duplication carriers
+  # Identify high-confidence deletion and duplication carriers
   del_carriers <- df_cnvs[which(df_cnvs$Copy_Number == 1 & abs(df_cnvs$Quality_Score) >= 0.5), "IID"]
   dup_carriers <- df_cnvs[which(df_cnvs$Copy_Number == 3 & abs(df_cnvs$Quality_Score) >= 0.5), "IID"]
   
@@ -147,10 +142,13 @@ for (i in 1:nrow(df)) {
                        tidy = map(lm, broom::tidy)) %>%
                 pull(tidy) %>%
                 map2_df(seq(1, batch_size), ~mutate(.x, resample = .y))
+    
     # Save beta estimates
     df_boot1 <- as.data.frame(df_boot1[which(df_boot1$term == "CNV"), c(1:2)])
-    # Merge to summary table
+    
+    # Merge to the summary table
     df_boot1_tidy <- rbind(df_boot1_tidy, df_boot1)
+    
     # Clean
     rm(df_boot1)
   }
@@ -158,6 +156,7 @@ for (i in 1:nrow(df)) {
   # Bootstrap resample the dataset, run lm(), summarize, extract effect size estimates, store in a single table -> M2 (CNV & PGS)
   df_boot2_tidy <- data.frame()
   for (b in 1:n_batch) { # Split in batches to avoid running out of RAM
+    
     # Bootstrap round
     df_boot2 <- df_temp %>%
       bootstrap(batch_size) %>%
@@ -165,10 +164,13 @@ for (i in 1:nrow(df)) {
              tidy = map(lm, broom::tidy)) %>%
       pull(tidy) %>%
       map2_df(seq(1, batch_size), ~mutate(.x, resample = .y))
+    
     # Save beta estimates
     df_boot2 <- as.data.frame(df_boot2[which(df_boot2$term == "CNV"), c(1:2)])
-    # Merge to summary table
+    
+    # Merge to the summary table
     df_boot2_tidy <- rbind(df_boot2_tidy, df_boot2)
+    
     # Clean
     rm(df_boot2)
   }
