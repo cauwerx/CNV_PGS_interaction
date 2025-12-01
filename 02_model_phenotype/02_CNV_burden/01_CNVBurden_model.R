@@ -18,7 +18,7 @@ test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
 # Phenotype (covariate-corrected + INT; filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per phenotype, containing covariate-adjusted, inverse-normal transformed phenotype values 
-pheno <- as.data.frame(fread("CNV_PGS/data/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.txt"))
+pheno <- as.data.frame(fread("CNV_PGS/data/pheno_continuous_INT_age_age2_sex_batch_PCs_All.txt"))
 pheno <- pheno[pheno$IID %in% test_samples$IID, ]
 
 # CNV burden data (filtered for testing samples IID)
