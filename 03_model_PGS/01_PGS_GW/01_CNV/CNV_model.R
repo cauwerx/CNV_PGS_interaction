@@ -120,7 +120,7 @@ rm(i, p, chr, pos, model, del_carriers, dup_carriers, df_temp)
 
 
 ########################################################
-# STEP 3: Compare to CNV effect on Phenotype
+# STEP 3: Compare to CNV effect on phenotype
 ########################################################
 
 # Load CNV effects on phenotype
