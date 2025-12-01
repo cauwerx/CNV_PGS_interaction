@@ -122,13 +122,9 @@ cnv_effect <- left_join(df, cnv_effect_pheno)
 
 # Among all CNV-trait pairs
 nrow(cnv_effect[which(cnv_effect$EFFECT_CNV_PGS_GW > 0 & cnv_effect$EFFECT_CNV_PHENO > 0), ]) + nrow(cnv_effect[which(cnv_effect$EFFECT_CNV_PGS_GW < 0 & cnv_effect$EFFECT_CNV_PHENO < 0), ])
-# 90/119 (76%)
-binom.test(90,119,0.5, alternative = "greater")
 
 # Among nominally significant 
 nrow(cnv_effect[which(cnv_effect$EFFECT_CNV_PGS_GW > 0 & cnv_effect$EFFECT_CNV_PHENO > 0 & cnv_effect$P_CNV_PGS_GW < 0.05), ]) + nrow(cnv_effect[which(cnv_effect$EFFECT_CNV_PGS_GW < 0 & cnv_effect$EFFECT_CNV_PHENO < 0 & cnv_effect$P_CNV_PGS_GW < 0.05), ])
-# 10/11 (91%)
-binom.test(10,11,0.5, alternative = "greater")
 
 
 ########################################################
