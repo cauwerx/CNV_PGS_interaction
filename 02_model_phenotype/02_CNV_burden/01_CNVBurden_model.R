@@ -12,13 +12,9 @@ library(tidyr)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
-# File with a single column (IID) containing the sample identifier for all samples in the test set. 
+# Testing samples
+# File with a single column (IID) containing the sample identifier for all samples in the test set
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
-
-# Phenotypic variability explained by the PGS
-# File with the following columns:  PHENO, cor_2 (squared correlation between phenotype and PGS)
-cor2 <- as.data.frame(fread("CNV_PGS/data/phenotype_explained_by_PGS.txt"))
 
 # Phenotype (covariate-corrected + INT; filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per phenotype, containing covariate-adjusted, inverse-normal transformed phenotype values 
@@ -40,9 +36,9 @@ rm(cnv_burden, dup_burden, del_burden)
 # STEP 2:Regression analysis
 ########################################################
 
-# Create a dataframe to store regression results
-df <- cor2[, c(1,5)]
-rm(cor2)
+# Create a dataframe to store results
+df <- cnv_signals
+rm(cnv_signals)
 
 # Loop over phenotypes
 for (i in 1:nrow(df)) {
@@ -61,7 +57,6 @@ for (i in 1:nrow(df)) {
   df[i, "EFFECT_CNV_GENES"] <- summary(fit_CNV)$coefficients[2,1]
   df[i, "SE_CNV_GENES"] <- summary(fit_CNV)$coefficients[2,2]
   df[i, "P_CNV_GENES"] <- summary(fit_CNV)$coefficients[2,4]
-  
   df[i, "adjR2_CNV_GENES"] <- summary(fit_CNV)$adj.r.squared
   
   # Fit linear regression - DEL burden
@@ -71,7 +66,6 @@ for (i in 1:nrow(df)) {
   df[i, "EFFECT_DEL_GENES"] <- summary(fit_DEL)$coefficients[2,1]
   df[i, "SE_DEL_GENES"] <- summary(fit_DEL)$coefficients[2,2]
   df[i, "P_DEL_GENES"] <- summary(fit_DEL)$coefficients[2,4]
-  
   df[i, "adjR2_DEL_GENES"] <- summary(fit_DEL)$adj.r.squared
   
   # Fit linear regression - DUP burden
@@ -81,7 +75,6 @@ for (i in 1:nrow(df)) {
   df[i, "EFFECT_DUP_GENES"] <- summary(fit_DUP)$coefficients[2,1]
   df[i, "SE_DUP_GENES"] <- summary(fit_DUP)$coefficients[2,2]
   df[i, "P_DUP_GENES"] <- summary(fit_DUP)$coefficients[2,4]
-  
   df[i, "adjR2_DUP_GENES"] <- summary(fit_DUP)$adj.r.squared
   
 }
