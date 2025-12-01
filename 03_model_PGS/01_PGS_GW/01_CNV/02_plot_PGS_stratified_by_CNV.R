@@ -19,8 +19,8 @@ font_add("Arial", "/System/Library/Fonts/Supplemental/Arial.ttf", bold = "/Syste
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
-# File with a single column (IID) containing the sample identifier for all samples in the test set. 
+# Testing samples
+# File with a single column (IID) containing the sample identifier for all samples in the test set
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
 # CNV signals
@@ -164,12 +164,12 @@ for (i in 1:nrow(cnv_signals)) {
                           strip.text = element_text(size = 12, face = "bold", color = "#2B4050"),
                           strip.background = element_rect(fill = "#F4F4F4", color = "#2B4050"))
   
-    # Plot individual data points only if there are less than 1000 DEL carreiers
+    # Plot individual data points only if there are fewer than 1000 DEL carriers
     if(nrow(df[grep("^Del", df$TYPE), ]) < 1000) {
       plot_list[[i]] <- plot_list[[i]] + geom_point(df[grep("^Del", df$TYPE), ], mapping = aes(x = TYPE, y = PGS, fill = TYPE), position = position_jitterdodge(jitter.width = 0.6, dodge.width = 0.85), alpha = 0.25, color = "#2B4050", size = 1)
     }
   
-    # Plot individual data points only if there are less than 1000 DUP carreiers
+    # Plot individual data points only if there are fewer than 1000 DUP carriers
     if(nrow(df[grep("^Dup", df$TYPE), ]) < 1000) {
       plot_list[[i]] <- plot_list[[i]] + geom_point(df[grep("^Dup", df$TYPE), ], mapping = aes(x = TYPE, y = PGS, fill = TYPE), position = position_jitterdodge(jitter.width = 0.6, dodge.width = 0.85), alpha = 0.25, color = "#2B4050", size = 1)
     }                
