@@ -114,4 +114,4 @@ rm(i, p, chr, pos, model, del_carriers, dup_carriers, df_temp, z_r, se_z, z_L95,
 # STEP 3: Save data
 ########################################################
 
-fwrite(df, "CNV_PGS/data/CNV_cor_PGS_cis_CHR.txt", col.names = T, row.names = F, quote = F, sep = "\t")
+fwrite(df, "CNV_PGS/data/model_PGS/CNV_cor_PGS_cis_CHR.txt", col.names = T, row.names = F, quote = F, sep = "\t")
