@@ -12,7 +12,7 @@ library(MBESS)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
+# Testing samples 
 # File with a single column (IID) containing the sample identifier for all samples in the test set 
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
@@ -26,7 +26,7 @@ pheno_int <- pheno_int[pheno_int$IID %in% test_samples$IID, ]
 pgs <- as.data.frame(fread("CNV_PGS/data/PGS_continuous.txt.gz"))
 pgs <- pgs[pgs$IID %in% test_samples$IID, ]
 
-# Covariates (filtered for testing samples IID) )
+# Covariates (filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per covariate, including age, age^2, sex, genotyping batch, and PC1-40
 cov <- as.data.frame(fread("CNV_PGS/data/covariates.txt"))
 cov <- cov[cov$IID %in% test_samples$IID, ]
@@ -61,7 +61,7 @@ for (p in df$PHENO) {
   # MODEL 1: Y_int ~ PGS + sex + age + age2 + batch + PC1-40
   fit1 <- lm(PHENO ~ . , data = df_temp[, -c(1)])
   
-  # Fill in table with summary statistics
+  # Fill in the table with summary statistics
   df[which(df$PHENO == p), "fit1_BETA"] <- summary(fit1)$coefficients[2,1]
   df[which(df$PHENO == p), "fit1_SE"] <- summary(fit1)$coefficients[2,2]
   df[which(df$PHENO == p), "fit1_P"] <- summary(fit1)$coefficients[2,4]
@@ -78,7 +78,7 @@ for (p in df$PHENO) {
   # MODEL 2: Y_int ~ sex + age + age2 + batch + PC1-40 (NO PGS)
   fit2 <- lm(PHENO ~ . , data = df_temp[, -c(1,3)])
   
-  # Fill in table with summary statistics
+  # Fill in the table with summary statistics
   df[which(df$PHENO == p), "fit2_R2"] <- summary(fit2)$r.squared
   df[which(df$PHENO == p), "fit2_R2adj"] <- summary(fit2)$adj.r.squared
   
@@ -103,12 +103,15 @@ for (p in df$PHENO) {
 rm(p, df_pheno, df_pgs, df_temp, fit1, fit2, n, k)
 
 
-# Save file
-fwrite(df, "phenotype_explained_by_PGS.txt", col.names = T, row.names = F, quote = F, sep = "\t")
+########################################################
+# STEP 3: Save data
+########################################################
+
+fwrite(df, "CNV_PGS/data/PGS_performance/phenotype_explained_by_PGS.txt", col.names = T, row.names = F, quote = F, sep = "\t")
 
 
 ########################################################
-# STEP 3: Assess Delta R^2
+# STEP 4: Assess Delta R^2
 ########################################################
 
 # Calculate median Delta
