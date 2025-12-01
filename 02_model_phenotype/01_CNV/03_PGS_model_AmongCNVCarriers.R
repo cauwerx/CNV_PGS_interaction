@@ -16,32 +16,28 @@ library(purrr)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
-# File with a single column (IID) containing the sample identifier for all samples in the test set. 
+# Testing samples
+# File with a single column (IID) containing the sample identifier for all samples in the test set 
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
 # CNV signals
 # File with the following columns: PHENO, CHR, CNVR_START, CNVR_STOP, TOP_MODEL, CB (cytogenic band)
 cnv_signals <- as.data.frame(fread("CNV_PGS/data/cnv_signals.txt"))
 
-# Phenotypic variability explained by the PGS
-# File with the following columns:  PHENO, cor_2 (squared correlation between phenotype and PGS)
-cor2 <- as.data.frame(fread("CNV_PGS/data/phenotype_explained_by_PGS.txt"))
-
 # Phenotype (raw; filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per phenotype, containing raw phenotype values 
 pheno <- as.data.frame(fread("CNV_PGS/data/pheno_continuous_WB_raw.txt"))
 pheno <- pheno[pheno$IID %in% test_samples$IID, ]
 
-# Covariates (raw; filtered for testing samples IID)
-# File with sample identifier (IID) as first column, then age, age2^2, sex, array (i.e., genotyping array), batch (i.e., genotyping batch), principal components 1-40
-cov <- as.data.frame(fread("CNV_PGS/data/covariates.txt"))
-cov <- cov[cov$IID %in% test_samples$IID, ]
-
 # Polygenic scores (PGSs; filtered for testing samples IID) 
 # File with sample identifier (IID) as first column, then one column per phenotype, containing PGS values
 pgs <- as.data.frame(fread("CNV_PGS/data/PGS_continuous.txt.gz"))
 pgs <- pgs[pgs$IID %in% test_samples$IID, ]
+
+# Covariates (raw; filtered for testing samples IID)
+# File with sample identifier (IID) as first column, then age, age2^2, sex, batch (i.e., genotyping batch), principal components 1-40
+cov <- as.data.frame(fread("CNV_PGS/data/covariates.txt"))
+cov <- cov[cov$IID %in% test_samples$IID, ]
 
 # CNV calls (filtered for testing samples IID)
 # CNV calls for the UKBB (as described in Auwerx et al., 2022)
@@ -58,10 +54,6 @@ cnvs <- as.data.frame(cnvs[cnvs$IID %in% test_samples$IID, ])
 # Create a dataframe to store results
 df <- cnv_signals
 colnames(df)[9:11] <- c("EFFECT_CNV", "SE_CNV", "P_CNV")
-
-# Add phenotypic variance explained by PGS
-df <- right_join(cor2, df, by = "PHENO")
-rm(cor2)
 
 # Set parameters
 set.seed(678)
@@ -82,10 +74,10 @@ for (i in 1:nrow(df)) {
   scaling_factor <- df[i, "cor_2"]/sqrt(df[i, "var_PGS"])
   print(paste0("Analyzing ", p," for chr", chr, ":", pos, " CNVs (", model, ")"))
   
-  # Identify samples carrying relevant CNVs (overlaping lead signal)
+  # Identify samples carrying relevant CNVs (overlapping lead signal)
   df_cnvs <- cnvs[which(cnvs$Chromosome == chr & cnvs$Start_Position_bp <= pos & cnvs$End_Position_bp >= pos), ]
   
-  # Identify high confidence deletion and duplication carriers
+  # Identify high-confidence deletion and duplication carriers
   del_carriers <- df_cnvs[which(df_cnvs$Copy_Number == 1 & abs(df_cnvs$Quality_Score) >= 0.5), "IID"]
   dup_carriers <- df_cnvs[which(df_cnvs$Copy_Number == 3 & abs(df_cnvs$Quality_Score) >= 0.5), "IID"]
   
@@ -113,7 +105,7 @@ for (i in 1:nrow(df)) {
   colnames(df_temp)[4] <- "PGS"
 
   # Add covariates (age, age^2, sex, PC1-10) & factorize (sex)
-  df_temp <- left_join(df_temp, cov[, -c(5:6, 17:46)], by = "IID")
+  df_temp <- left_join(df_temp, cov[, -c(5, 16:45)], by = "IID")
   df_temp$sex <- factor(df_temp$sex)
   
   # Get the population SD
@@ -150,7 +142,7 @@ for (i in 1:nrow(df)) {
                  summarize(bse = sd(estimate))
   
   
-  # Get the p-value for the coeffcients
+  # Get the p-value for the coefficients
   fit_carrier_summary <- broom::tidy(fit_carrier) %>%
                           mutate(category = "OLS Standard Errors") %>%
                           bind_rows(., broom::tidy(fit_carrier) %>% select(-std.error) %>% left_join(., BSE_carrier %>% rename(std.error = bse))) %>%
@@ -171,7 +163,7 @@ for (i in 1:nrow(df)) {
   df[i, "BootL95_PGS_carrier"] <- fit_carrier_summary[which(fit_carrier_summary$category == "Bootstrapped Standard Errors" & fit_carrier_summary$term == "PGS"), "L95"]
   df[i, "BootU95_PGS_carrier"] <- fit_carrier_summary[which(fit_carrier_summary$category == "Bootstrapped Standard Errors" & fit_carrier_summary$term == "PGS"), "U95"]
   
-  # For Figure S2, plotting effects on the SD scale
+  # For Figure S3, plotting effects on the SD scale
   df[i, "EFFECT_PGS_SD"] <- df[i, "EFFECT_PGS_carrier"]/df[i, "population_SD"]
   df[i, "L95_PGS_SD"] <- quantile(boot_carrier_tidy$estimate[which(boot_carrier_tidy$term == "PGS")], 0.025)/df[i, "population_SD"]
   df[i, "U95_PGS_SD"] <- quantile(boot_carrier_tidy$estimate[which(boot_carrier_tidy$term == "PGS")], 0.975)/df[i, "population_SD"]
@@ -183,14 +175,14 @@ rm(i, p, chr, pos, model, scaling_factor, df_cnvs, df_temp, fit)
 
 
 ########################################################
-# STEP 4: Save data
+# STEP 3: Save data
 ########################################################
 
 fwrite(df, "CNV_PGS/data/model_phenotype/bootstrapSE_effect_PGS_carrier_vs_non_carrier_best_CNV_model.txt", col.names = T, row.names = F, quote = F, sep = "\t")
 
 
 ########################################################
-# STEP 4: Assess effect of sample size and PGS performance on likelihood to be significant
+# STEP 4: Assess the effect of sample size and PGS performance on the likelihood to be significant
 ########################################################
 
 # Identify Bonferroni-significant signals
