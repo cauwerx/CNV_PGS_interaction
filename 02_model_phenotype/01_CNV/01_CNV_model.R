@@ -12,17 +12,13 @@ library(tidyr)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
+# Testing samples 
 # File with a single column (IID) containing the sample identifier for all samples in the test set. 
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
 # CNV signals
 # File with the following columns: PHENO, CHR, CNVR_START, CNVR_STOP, TOP_MODEL, CB (cytogenic band)
 cnv_signals <- as.data.frame(fread("CNV_PGS/data/cnv_signals.txt"))
-
-# Phenotypic variability explained by the PGS
-# File with the following columns: PHENO, cor_2 (squared correlation between phenotype and PGS)
-cor2 <- as.data.frame(fread("CNV_PGS/data/phenotype_explained_by_PGS.txt"))
 
 # Phenotype (covariate-corrected + INT; filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per phenotype, containing covariate-adjusted, inverse-normal transformed phenotype values 
@@ -47,8 +43,8 @@ cnvs <- as.data.frame(cnvs[cnvs$IID %in% test_samples$IID, ])
 ########################################################
 
 # Create a dataframe to store results
-df <- right_join(cor2, cnv_signals, by = "PHENO")
-rm(cor2)
+df <- cnv_signals
+rm(cnv_signals)
 
 # Loop over CNV-trait pairs
 for (i in 1:nrow(df)) {
@@ -63,7 +59,7 @@ for (i in 1:nrow(df)) {
   # Identify samples carrying relevant CNVs (overlapping the lead probe)
   df_cnvs <- cnvs[which(cnvs$Chromosome == chr & cnvs$Start_Position_bp <= pos & cnvs$End_Position_bp >= pos), ]
   
-  # Identify high confidence deletion and duplication carriers
+  # Identify high-confidence deletion and duplication carriers
   del_carriers <- df_cnvs[which(df_cnvs$Copy_Number == 1 & abs(df_cnvs$Quality_Score) >= 0.5), "IID"]
   dup_carriers <- df_cnvs[which(df_cnvs$Copy_Number == 3 & abs(df_cnvs$Quality_Score) >= 0.5), "IID"]
   
