@@ -12,13 +12,9 @@ library(tidyr)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
+# Testing samples
 # File with a single column (IID) containing the sample identifier for all samples in the test set
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
-
-# Phenotypic variability explained by the PGS
-# File with the following columns:  PHENO, cor_2 (squared correlation between phenotype and PGS)
-cor2 <- as.data.frame(fread("CNV_PGS/data/phenotype_explained_by_PGS.txt"))
 
 # Polygenic scores (PGSs; filtered for testing samples IID) 
 # File with sample identifier (IID) as first column, then one column per phenotype, containing PGS values
@@ -30,7 +26,7 @@ pgs <- pgs[pgs$IID %in% test_samples$IID, ]
 lof <- as.data.frame(fread("CNV_PGS/data/LoF_burden.total.txt"))
 lof <- lof[lof$IID %in% test_samples$IID, ]
 
-# Load LoF burden effect on phenotype; Output from model_phenotype/pLoFBurden_model.R 
+# Load LoF burden effect on phenotype; Output from 02_model_phenotype/03_pLoF/01_pLoFBurden_model.R
 df_lof_on_pheno <- as.data.frame(fread("CNV_PGS/data/model_phenotype/LoFBurden_model.txt"))
 
 
@@ -39,7 +35,7 @@ df_lof_on_pheno <- as.data.frame(fread("CNV_PGS/data/model_phenotype/LoFBurden_m
 ########################################################
 
 # Select traits to test
-pheno_lof_burden <- df_lof_on_pheno[which(df_lof_on_pheno$P_LoF <= 0.05/43), "PHENO"] # 15
+pheno_lof_burden <- df_lof_on_pheno[which(df_lof_on_pheno$P_LoF <= 0.05/43), "PHENO"]
 
 # Create a dataframe to store results
 df <- df_lof_on_pheno[, c(1:5)]
@@ -64,15 +60,14 @@ rm(p, df_temp, fit)
 
 
 ########################################################
-# STEP 3: Compare to CNV burden effect on phenotype
+# STEP 3: Compare results to the CNV burden effect on the phenotype
 ########################################################
 
-# Sign concordance (i.e., if CNV burde increases a trait, the CNV burden will tend to increase the PGS for that trait & vice versa)
+# Sign concordance (i.e., if CNV burden increases a trait, the CNV burden will tend to increase the PGS for that trait & vice versa)
 
 # Among nominally significant 
 df_nom <- df[which(df$P_LoF_on_PGS_GW <= 0.05), ]
 nrow(df_nom[which((df_nom$EFFECT_LoF > 0 & df_nom$EFFECT_LoF_on_PGS_GW > 0) | (df_nom$EFFECT_LoF < 0 & df_nom$EFFECT_LoF_on_PGS_GW < 0)), ])
-# All 1 are directionally concordant
 binom.test(1,1,0.5, alternative = "greater")
 
 
