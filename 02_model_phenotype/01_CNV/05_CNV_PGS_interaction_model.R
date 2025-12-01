@@ -12,8 +12,8 @@ library(tidyr)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
-# File with a single column (IID) containing the sample identifier for all samples in the test set. 
+# Testing samples
+# File with a single column (IID) containing the sample identifier for all samples in the test set
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
 # CNV signals
@@ -59,7 +59,7 @@ for (i in 1:nrow(df)) {
   # Identify samples carrying relevant CNVs (overlapping the lead probe)
   df_cnvs <- cnvs[which(cnvs$Chromosome == chr & cnvs$Start_Position_bp <= pos & cnvs$End_Position_bp >= pos), ]
 
-  # Identify high confidence deletion and duplication carriers
+  # Identify high-confidence deletion and duplication carriers
   del_carriers <- df_cnvs[which(df_cnvs$Copy_Number == 1 & abs(df_cnvs$Quality_Score) >= 0.5), "IID"]
   dup_carriers <- df_cnvs[which(df_cnvs$Copy_Number == 3 & abs(df_cnvs$Quality_Score) >= 0.5), "IID"]
   
