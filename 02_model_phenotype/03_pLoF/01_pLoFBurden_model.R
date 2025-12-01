@@ -12,13 +12,13 @@ library(tidyr)
 # STEP 1: Load data
 ########################################################
 
-# Phenotypic variability explained by the PGS
-# File with the following columns:  PHENO, cor_2 (squared correlation between phenotype and PGS)
-cor2 <- as.data.frame(fread("CNV_PGS/data/phenotype_explained_by_PGS.txt"))
+# CNV signals
+# File with the following columns: PHENO, CHR, CNVR_START, CNVR_STOP, TOP_MODEL, CB (cytogenic band)
+cnv_signals <- as.data.frame(fread("CNV_PGS/data/cnv_signals.txt"))
 
 # Phenotype (covariate-corrected + INT; filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per phenotype, containing covariate-adjusted, inverse-normal transformed phenotype values 
-pheno <- as.data.frame(fread("CNV_PGS/data/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.txt"))
+pheno <- as.data.frame(fread("CNV_PGS/data/pheno_continuous_INT_age_age2_sex_batch_PCs_All.txt"))
 pheno <- pheno[pheno$IID %in% test_samples$IID, ]
 
 # pLoF burden
@@ -30,9 +30,9 @@ lof <- as.data.frame(fread("CNV_PGS/data/LoF_burden.total.txt"))
 # STEP 2: Regression analysis
 ########################################################
 
-# Create a dataframe to store regression results
-df <- cor2[, c(1,5)]
-rm(cor2)
+# Create a dataframe to store results
+df <- cnv_signals
+rm(cnv_signals)
 
 # Loop over phenotypes
 for (i in 1:nrow(df)) {
