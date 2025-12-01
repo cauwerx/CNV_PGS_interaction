@@ -12,13 +12,13 @@ library(tidyr)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
-# File with a single column (IID) containing the sample identifier for all samples in the test set. 
+# Testing samples
+# File with a single column (IID) containing the sample identifier for all samples in the test set 
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
 
 # Phenotype (covariate-corrected + INT; filtered for testing samples IID)
 # File with sample identifier (IID) as first column, then one column per phenotype, containing covariate-adjusted, inverse-normal transformed phenotype values 
-pheno <- as.data.frame(fread("CNV_PGS/data/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.txt"))
+pheno <- as.data.frame(fread("CNV_PGS/data/pheno_continuous_INT_age_age2_sex_batch_PCs_All.txt"))
 pheno <- pheno[pheno$IID %in% test_samples$IID, ]
 
 # Polygenic scores (PGSs; filtered for testing samples IID) 
@@ -63,16 +63,13 @@ for (i in 1:nrow(df)) {
   # Fill in the result table
   df[i, "EFFECT_CNV_GENES"] <- summary(fit_CNV)$coefficients[2,1]
   df[i, "SE_CNV_GENES"] <- summary(fit_CNV)$coefficients[2,2]
-  df[i, "P_CNV_GENES"] <- summary(fit_CNV)$coefficients[2,4]
-  
+  df[i, "P_CNV_GENES"] <- summary(fit_CNV)$coefficients[2,4]  
   df[i, "EFFECT_cnv_PGS"] <- summary(fit_CNV)$coefficients[3,1]
   df[i, "SE_cnv_PGS"] <- summary(fit_CNV)$coefficients[3,2]
   df[i, "P_cnv_PGS"] <- summary(fit_CNV)$coefficients[3,4]
-  
   df[i, "EFFECT_CNV_GENESxPGS"] <- summary(fit_CNV)$coefficients[4,1]
   df[i, "SE_CNV_GENESxPGS"] <- summary(fit_CNV)$coefficients[4,2]
   df[i, "P_CNV_GENESxPGS"] <- summary(fit_CNV)$coefficients[4,4]
-  
   df[i, "adjR2_CNV_GENES"] <- summary(fit_CNV)$adj.r.squared
   
   # Fit linear regression - DEL burden
@@ -82,15 +79,12 @@ for (i in 1:nrow(df)) {
   df[i, "EFFECT_DEL_GENES"] <- summary(fit_DEL)$coefficients[2,1]
   df[i, "SE_DEL_GENES"] <- summary(fit_DEL)$coefficients[2,2]
   df[i, "P_DEL_GENES"] <- summary(fit_DEL)$coefficients[2,4]
-  
   df[i, "EFFECT_del_PGS"] <- summary(fit_DEL)$coefficients[3,1]
   df[i, "SE_del_PGS"] <- summary(fit_DEL)$coefficients[3,2]
   df[i, "P_del_PGS"] <- summary(fit_DEL)$coefficients[3,4]
-  
   df[i, "EFFECT_DEL_GENESxPGS"] <- summary(fit_DEL)$coefficients[4,1]
   df[i, "SE_DEL_GENESxPGS"] <- summary(fit_DEL)$coefficients[4,2]
   df[i, "P_DEL_GENESxPGS"] <- summary(fit_DEL)$coefficients[4,4]
-  
   df[i, "adjR2_DEL_GENES"] <- summary(fit_DEL)$adj.r.squared
   
   # Fit linear regression - DUP burden
@@ -100,15 +94,12 @@ for (i in 1:nrow(df)) {
   df[i, "EFFECT_DUP_GENES"] <- summary(fit_DUP)$coefficients[2,1]
   df[i, "SE_DUP_GENES"] <- summary(fit_DUP)$coefficients[2,2]
   df[i, "P_DUP_GENES"] <- summary(fit_DUP)$coefficients[2,4]
-  
   df[i, "EFFECT_dup_PGS"] <- summary(fit_DUP)$coefficients[3,1]
   df[i, "SE_dup_PGS"] <- summary(fit_DUP)$coefficients[3,2]
   df[i, "P_dup_PGS"] <- summary(fit_DUP)$coefficients[3,4]
-  
   df[i, "EFFECT_DUP_GENESxPGS"] <- summary(fit_DUP)$coefficients[4,1]
   df[i, "SE_DUP_GENESxPGS"] <- summary(fit_DUP)$coefficients[4,2]
   df[i, "P_DUP_GENESxPGS"] <- summary(fit_DUP)$coefficients[4,4]
-  
   df[i, "adjR2_DUP_GENES"] <- summary(fit_DUP)$adj.r.squared
 
 }
