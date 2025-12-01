@@ -11,13 +11,9 @@ library(tidyr)
 # STEP 1: Load data
 ########################################################
 
-# Testing samples; 
+# Testing samples
 # File with a single column (IID) containing the sample identifier for all samples in the test set 
 test_samples <- as.data.frame(fread("CNV_PGS/data/test_IDs.txt"))
-
-# Phenotypic variability explained by the PGS
-# File with the following columns:  PHENO, cor_2 (squared correlation between phenotype and PGS)
-cor2 <- as.data.frame(fread("CNV_PGS/data/phenotype_explained_by_PGS.txt"))
 
 # Polygenic scores (PGSs; filtered for testing samples IID) 
 # File with sample identifier (IID) as first column, then one column per phenotype, containing PGS values
@@ -34,7 +30,7 @@ cnv <- left_join(cnv, del_burden, by = "IID")
 cnv <- cnv[cnv$IID %in% test_samples$IID, ]
 rm(cnv_burden, dup_burden, del_burden)
 
-# Load CNV burden effect on phenotype; Output from model_phenotype/CNVBurden_model.R
+# Load CNV burden effect on phenotype; Output from 02_model_phenotype/02_CNV_burden/01_CNVBurden_model.R
 df_cnv_on_pheno <- as.data.frame(fread("CNV_PGS/data/model_phenotype/CNVBurden_model.txt"))
 
 
@@ -46,8 +42,8 @@ df_cnv_on_pheno <- as.data.frame(fread("CNV_PGS/data/model_phenotype/CNVBurden_m
 pheno_cnv_burden <- df_cnv_on_pheno[which(df_cnv_on_pheno$P_CNV_GENES <= 0.05/43), "PHENO"]
 
 # Create a dataframe to store results
-df <- df_cnv_on_pheno[, c(1:5)]
-colnames(df) <- c("PHENO", "cor_2", "EFFECT_CNV_BURDEN", "SE_CNV_BURDEN", "P_CNV_BURDEN")
+df <- df_cnv_on_pheno[, c(1:4)]
+colnames(df) <- c("PHENO", "EFFECT_CNV_BURDEN", "SE_CNV_BURDEN", "P_CNV_BURDEN")
 df$CNV_TYPE <- "CNV"
 
 # Loop over selected phenotypes - impacted by the CNV burden
@@ -76,7 +72,7 @@ rm(type, p, df_temp, fit)
 # STEP 3: Compare to CNV burden effect on phenotype
 ########################################################
 
-# Sign concordance (i.e., if CNV burde increases a trait, the CNV burden will tend to increase the PGS for that trait & vice versa)
+# Sign concordance (i.e., if CNV burden increases a trait, the CNV burden will tend to increase the PGS for that trait & vice versa)
 
 # Among all CNV-trait pairs
 nrow(df[which((df$EFFECT_CNV_BURDEN > 0 & df$EFFECT_CNV_BURDEN_on_PGS_GW > 0) | (df$EFFECT_CNV_BURDEN < 0 & df$EFFECT_CNV_BURDEN_on_PGS_GW < 0)), ])
