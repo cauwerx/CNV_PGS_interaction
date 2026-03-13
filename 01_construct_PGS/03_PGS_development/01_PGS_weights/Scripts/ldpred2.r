@@ -144,6 +144,9 @@ multi_auto <- snp_ldpred2_auto(
 	burn_in = 500, num_iter = 500, report_step = 20,
 	allow_jump_sign = FALSE, use_MLE = TRUE, shrink_corr = coef_shrink)
 
+# NOTE: to run without manual parallelization, use vec_p_init = seq_log(1e-4, 0.2, length.out = 10)
+# In that case ldpred2_merge.r is not needed
+
 saveRDS(multi_auto, multi_auto_rds_p, compress=T)
 cat(paste("Output written in: ", multi_auto_rds_p, "\n"))
 
