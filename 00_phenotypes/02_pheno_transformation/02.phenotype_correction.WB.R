@@ -14,7 +14,7 @@ library(matrixStats)
 DIR="/home_dir/"
 OUT_DIR="/project/data/phenotypes/"
 
-pheno_all <- as.data.frame(fread(paste0(DIR, "/project/data/phenotypes/pheno_continuous_test_raw.tsv"), header = T))
+pheno_all <- as.data.frame(fread(paste0(DIR, "/project/data/phenotypes/pheno_continuous_WB_raw.tsv"), header = T))
 
 pheno_M <- subset(pheno_all, sex==1)
 pheno_M <- pheno_M[, !names(pheno_M) %in% c("menarche", "menopause","birth_weight_first_child")]
