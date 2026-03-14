@@ -5,9 +5,8 @@ import pandas as pd
 import gzip
 
 ################################################################################
-# Parameters
+# Set up parameters
 ################################################################################
-
 DIR = './project'
 pheno_file = DIR + '/data/phenotypes/pheno_names.with_CNV_signal.txt'
 with open(pheno_file) as f:

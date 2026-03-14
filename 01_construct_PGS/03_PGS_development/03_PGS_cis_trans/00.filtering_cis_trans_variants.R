@@ -5,7 +5,7 @@ install.packages('readxl')
 library('readxl')
 
 ################################################################################
-# Parameters
+# Set up parameters
 ################################################################################
 setwd('/project/data/')
 type <- "250kb" # 0kb, 50kb, 100kb, 250kb, CHR
