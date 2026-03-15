@@ -1,4 +1,4 @@
-# Compute within-couple phenotypic correlation
+# Compute within-couple phenotypic correlation (in test set)
 
 ################################################################################
 # Libraries
