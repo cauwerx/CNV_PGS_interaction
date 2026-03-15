@@ -1,4 +1,4 @@
-# Save info on phenotype, PGS_GW and CNV status
+# Save info on phenotype (with or without location/sex correction), PGS_GW or PGS_trans and CNV status
 
 ################################################################################
 # Libraries
@@ -13,8 +13,12 @@ project_DIR = "/mnt/project/"
 ################################################################################
 
 # 1.1) INT+cov-corrected phenotypes and PGSs
-pheno = pd.read_csv(project_DIR + "/55_out_of_sample.analyses/data/pheno/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.tsv.tar.gz", sep='\t')
-pgs = pd.read_csv(project_DIR + "/55_out_of_sample.analyses/data/PGS.out_of_sample/PGS_continuous.tsv.gz", sep='\t')
+pheno = pd.read_csv(project_DIR + "/data/pheno/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.tsv.tar.gz", sep='\t')
+#pheno = pd.read_csv(project_DIR + "/data/pheno_with_location_corr/pheno_continuous_test_INT_age_age2_sex_batch_location_PCs_All.tsv.tar.gz", sep='\t') # with coordinates correction
+#pheno = pd.read_csv(project_DIR + "/data/pheno_with_sex_interaction_correction/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.tsv", sep='\t') # with sex interaction correction
+pgs = pd.read_csv(project_DIR + "/data/PGS.out_of_sample/PGS_continuous.tsv.gz", sep='\t') # PGS_GW
+#pgs = pd.read_csv(project_DIR + "/data/PGS.out_of_sample/PGS_continuous.out.250kb.tsv.gz", sep='\t') # PGS_trans
+
 print('Number of individuals with phenotype:', len(pheno))
 print('Number of individuals with PGS:', len(pgs))
 
@@ -141,5 +145,7 @@ full_info = full_info.merge(CNV_status, on="IID", how="left")
 # STEP 4: Save pheno + PGS + CNV_status info
 ################################################################################
 
-full_info.to_csv('pheno_pgs_cnv.autosomes.non_sex_specific.csv', index=False)
-
+full_info.to_csv('pheno_pgs_cnv.autosomes.non_sex_specific.csv', index=False) # PGS_GW
+#full_info.to_csv('pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.csv', index=False) # PGS_trans
+#full_info.to_csv('pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.pheno_location_correction.csv', index=False) # pheno with coordinates correction
+#full_info.to_csv('pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.pheno_sex_correction.csv', index=False) # pheno with sex correction
