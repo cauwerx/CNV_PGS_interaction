@@ -63,9 +63,9 @@ CI_from_SE <- function(correlation, SE, alpha=0.05){
   return(c(ci_lower = lo, ci_upper = hi))
 }
 
-##################################################################################################################
+################################################################################
 # STEP 1: Load data
-##################################################################################################################
+################################################################################
 
 # 1. Phenotype categories
 category_df <- read.table(
@@ -113,7 +113,6 @@ ordered_phenotypes_abbrev <- unique(CNVR$PHENO)
 ordered_phenotypes <- category_df[category_df$PHENO %in% ordered_phenotypes_abbrev, 'LABEL']
 
 # 3. Read genotype data (PGS & CNV) and phenotypes
-
 if (mode=="location_coord"){
    pheno_pgs_cnv_path <- "/data/pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.pheno_location_correction.csv"
 } else if (mode=="sex_interact"){
@@ -164,9 +163,9 @@ bands$POS <- as.integer(bands$POS)
 bands <- bands[,c("PHENO", "CHR", "POS", "CB", "CB_PHENO")]
 CNVR <- left_join(CNVR, bands, by = c("PHENO" = "PHENO", "CHR" = "CHR", "TOP_POS" = "POS"))
 
-##################################################################################################################
+################################################################################
 # STEP 2: Pheno-pheno couples correlation
-##################################################################################################################
+################################################################################
 
 # 1. Create an empty data frame for corr, CI, p-values & n
 corr_df.v1 <- data.frame(matrix(NA, nrow = length(ordered_phenotypes_abbrev), ncol = 0), row.names = ordered_phenotypes_abbrev)
@@ -202,9 +201,9 @@ for (pheno in ordered_phenotypes_abbrev) {
     }
 }
 
-##################################################################################################################
+################################################################################
 # STEP 3: Total vs Indirect CNV-PGS correlation (119 CNV-trait pairs)
-##################################################################################################################
+################################################################################
 
 # 1. Computing total and indirect pgs-cnv correlations
 # create dataframe to save results for CNV-trait pairs
@@ -305,9 +304,9 @@ fwrite(cnv_pgs.corr.v1[, !(names(cnv_pgs.corr.v1) %in% c("pheno_abbrev", "CB_PHE
 
 if (mode=="base"){
 
-##################################################################################################################
+################################################################################
 # STEP 4: Total vs Indirect CNV burden-PGS correlation
-##################################################################################################################
+################################################################################
 
 # 1. Load phenotypes significantly affected by burden
 pheno_affected <- c("neuroticism", "GS", "vitamin_D", "WHR", "fluid_intelligence", "WHRadjBMI", "heart_rate", "neutrophil_count", "FVC",  "body_fat_mass", "WBC_count", "BMI", "CRP", "ApoA", "HbA1c", "cystatinC", "BMD", "HDL", "ALP", "platelet_count", "height")
