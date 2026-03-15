@@ -14,7 +14,7 @@ project_DIR = "/mnt/project/"
 
 # 1.1) INT+cov-corrected phenotypes and PGSs
 pheno = pd.read_csv(project_DIR + "/data/pheno/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.tsv.tar.gz", sep='\t')
-#pheno = pd.read_csv(project_DIR + "/data/pheno_with_location_corr/pheno_continuous_test_INT_age_age2_sex_batch_location_PCs_All.tsv.tar.gz", sep='\t') # with coordinates correction
+#pheno = pd.read_csv(project_DIR + "/data/pheno_with_location_correction/pheno_continuous_test_INT_age_age2_sex_batch_location_PCs_All.tsv.tar.gz", sep='\t') # with coordinates correction
 #pheno = pd.read_csv(project_DIR + "/data/pheno_with_sex_interaction_correction/pheno_continuous_test_INT_age_age2_sex_batch_PCs_All.tsv", sep='\t') # with sex interaction correction
 pgs = pd.read_csv(project_DIR + "/data/PGS.out_of_sample/PGS_continuous.tsv.gz", sep='\t') # PGS_GW
 #pgs = pd.read_csv(project_DIR + "/data/PGS.out_of_sample/PGS_continuous.out.250kb.tsv.gz", sep='\t') # PGS_trans
