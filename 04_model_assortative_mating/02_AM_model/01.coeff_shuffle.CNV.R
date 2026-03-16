@@ -76,11 +76,12 @@ stopifnot(length(unique(CNVR[['PHENO']])) == 43)
 
 # Create empty data frames for saving correlations among couples and within individuals (1 row per CNVR)
 corr_df <- data.frame(
-    `pheno_F-pheno_M` = numeric(nrow(CNVR)),
-    `pheno-PGS`       = numeric(nrow(CNVR)),
-    `pheno-CNV`       = numeric(nrow(CNVR)),
-    `PGS-CNV.total`   = numeric(nrow(CNVR)),
-    row.names         = paste0(CNVR$PHENO, "_CNV_", CNVR$CNV_REGION),
+    `pheno_F-pheno_M`  = numeric(nrow(CNVR)),
+    `pheno-PGS`        = numeric(nrow(CNVR)),
+    `pheno-CNV`        = numeric(nrow(CNVR)),
+    `PGS-CNV.total`    = numeric(nrow(CNVR)),
+    `PGS-CNV.indirect` = numeric(nrow(CNVR)),
+    row.names          = paste0(CNVR$PHENO, "_CNV_", CNVR$CNV_REGION),
     check.names = FALSE
 )
 
@@ -114,7 +115,7 @@ for (i in seq_len(nrow(CNVR))) {
         corr_df[pheno_CNVR, "pheno-CNV"] <- unname(test$estimate)
     }
 
-    # 'pgs-CNV' ("total")
+    # 'PGS-CNV' ("total")
     valid_data <- pheno_pgs_cnv[!is.na(pheno_pgs_cnv[[pheno_PGSR]]) & !is.na(pheno_pgs_cnv[[pheno_CNVR]]), ]
     if (nrow(valid_data) > 1) {
         test <- cor.test(valid_data[[pheno_PGSR]], valid_data[[pheno_CNVR]], method = "pearson")
@@ -133,8 +134,7 @@ set.seed(81)
 if (coeff=="alpha") {
     cnv_list <- c()
     for (i in seq_len(nrow(CNVR))) {
-        pheno <- CNVR[i, "PHENO"]
-        pheno_CNVR <- paste0(pheno, "_CNV_", CNVR[i, "CNV_REGION"])
+        pheno_CNVR <- paste0(CNVR[i, "PHENO"], "_CNV_", CNVR[i, "CNV_REGION"])
         cnv_list <- c(cnv_list, pheno_CNVR)
     }
 
@@ -143,8 +143,7 @@ if (coeff=="alpha") {
 if (coeff=="gamma") {
     pgs_list <- c()
     for (i in seq_len(nrow(CNVR))) {
-        pheno <- CNVR[i, "PHENO"]
-        pheno_PGSR <- paste0(pheno, "_chr", CNVR[i, "PGS_REGION"], "_PGS")
+        pheno_PGSR <- paste0(CNVR[i, "PHENO"], "_chr", CNVR[i, "PGS_REGION"], "_PGS")
         pgs_list <- c(pgs_list, pheno_PGSR)
     }
 }
