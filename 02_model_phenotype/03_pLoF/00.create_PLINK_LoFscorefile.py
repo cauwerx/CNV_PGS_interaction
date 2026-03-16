@@ -31,6 +31,9 @@ anno["ALT"] = anno["SNP"].str.split(":").str.get(3)
 # Filter for variants within the MAF threshold annotated
 sub_anno = anno.query('(MAF_wb < @MAF_threshold)')
 
+# Check no duplicate variants
+assert(sub_anno[sub_anno['SNP'].duplicated(keep=False)].shape[0]==0)
+
 # Set weight=1 (same weight for all variants)
 sub_anno.loc[:,'weight'] = 1
 
