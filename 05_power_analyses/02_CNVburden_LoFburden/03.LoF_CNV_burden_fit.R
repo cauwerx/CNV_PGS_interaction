@@ -1,3 +1,5 @@
+# Fit normal, negative binomial and Poisson models to CNV_burden and LoF_burden
+
 ###########################################################################################
 # Libraries
 ###########################################################################################
@@ -14,23 +16,23 @@ sample_qc <- as.data.frame(fread("/mnt/project/Bulk/Genotype\ Results/Genotype\ 
 colnames(sample_qc) <- c("array", "batch", "plate", "well", "cluster_CR", "dQC", "dna_concentration", "submitted_gender", "inferred_gender", "X_intensity", "Y_intensity", "submitted_plate", "submitted_well", "missing_rate", "heterozygosity", "heterozygosity_pc_corrected", "heterozygosity_missing_outlier", "PSCA", "in_kinship", "excluded_kinship_inference", "excess_relatives", "white_british", "pca_calculation", paste0("PC", seq(1,40)), "phasing_autosome", "phasing_X", "phasing_Y")
 sample_eid <- as.data.frame(fread("/mnt/project/Bulk/Genotype\ Results/Genotype\ calls/ukb22418_c1_b0_v2.fam", header = F, select = c(1,2,5), col.names = c("fid", "eid", "sex")))
 df <- cbind(sample_eid, sample_qc)
-WB_df <- df[which(df$white_british == 1),]['eid']
+WB_df <- df[df$white_british == 1, "eid", drop = FALSE]
 
 # Load CNV burden and LoF burden
 cnv_burden = as.data.frame(fread('/mnt/project/data/CNV_burden/CNV_burden.txt.gz', sep='\t'))
 lof_burden = as.data.frame(fread('/mnt/project/data/LoF_burden/LoF_burden.total.csv', sep=','))
 
 # Filter by WB individuals
-cnv_burden = merge(WB_df, cnv_burden, by='IID',  all.x = TRUE, by.x = "eid", by.y = "IID")
-lof_burden = merge(WB_df, lof_burden, on='IID',  all.x = TRUE, by.x = "eid", by.y = "IID")
-burden = merge(lof_burden, cnv_burden, on='IID')
+cnv_burden = merge(WB_df, cnv_burden, by.x = "eid", by.y = "IID", all.x = TRUE)
+lof_burden = merge(WB_df, lof_burden, by.x = "eid", by.y = "IID", all.x = TRUE)
+burden = merge(lof_burden, cnv_burden, by='eid', all = TRUE)
 
 ###########################################################################################
 # STEP 1: Compute LoF burden - CNV burden correlation
 ###########################################################################################
-mask <- !is.na(burden['LoF_total']) & !is.na(burden['BURDEN_GENES'])
+mask <- !is.na(burden$LoF_total) & !is.na(burden$BURDEN_GENES)
 valid_data <- burden[mask,]
-WB_n <- nrow(vaalid_data)
+WB_n <- nrow(valid_data)
 print(cor.test(valid_data$LoF_total, valid_data$BURDEN_GENES))
 
 ###########################################################################################
@@ -100,5 +102,4 @@ dist_lof_longdf <- melt(setDT(dist_lof_df),
                         measure.vars=c('LoF_total', 'normal_lof', 'nbinom_lof', 'poisson_lof'),
                         variable.name='type',
                         value.name="value")
-
 
