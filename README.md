@@ -1,7 +1,7 @@
 # Contribution of PGS to variable expressivity of CNVs
 Code repository for *"Compounding of rare pathogenic copy-number variants and polygenic risk is consistent with assortative mating"*
 
-**DOI:** <a href="[https://www.example.com](https://www.medrxiv.org/content/10.1101/2025.09.08.25335316v1.full.pdf)">Preprint</a>
+**DOI:** [Preprint](https://www.medrxiv.org/content/10.1101/2025.09.08.25335316v1.full.pdf)
 
 **Contact:** Chiara Auwerx (cauwerx -at- mgh.harvard.edu); Caterina Cevallos (caterina.cevallos -at- unil.ch); Zoltan Kutalik (zoltan.kutalik -at- unil.ch).
 
