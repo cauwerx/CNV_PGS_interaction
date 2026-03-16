@@ -51,7 +51,7 @@ cnv_burden <- as.data.frame(fread('/mnt/project/data/CNV_burden/CNV_burden.txt.g
 # Remove individual CNVs
 pheno_pgs_cnvburden <- pheno_pgs_cnv[, !grepl("_CNV_", names(pheno_pgs_cnv))]
 # Add CNV_burden
-pheno_pgs_cnvburden <- merge(pheno_pgs_cnvburden, cnv_burden[,c('IID', 'BURDEN_GENES')], by='IID')
+pheno_pgs_cnvburden <- merge(pheno_pgs_cnvburden, cnv_burden[,c('IID', 'BURDEN_GENES')], by='IID', all.x = TRUE)
 
 # 5. pheno-CNV_burden associations
 pheno_affected <- c("neuroticism", "GS", "vitamin_D", "WHR", "fluid_intelligence", "WHRadjBMI", "heart_rate", "neutrophil_count", "FVC",  "body_fat_mass", "WBC_count", "BMI", "CRP", "ApoA", "HbA1c", "cystatinC", "BMD", "HDL", "ALP", "platelet_count", "height")

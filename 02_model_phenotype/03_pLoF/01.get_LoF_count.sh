@@ -1,4 +1,4 @@
-# Compute pLoF burden with PLINK
+# Compute pLoF variant count with PLINK
 
 type="pLoF"
 path_to_score_files="/penetrance_at_scale/data/scorefiles_perCHR_MAF0.01/"
