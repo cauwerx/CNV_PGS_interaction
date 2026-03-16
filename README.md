@@ -19,15 +19,17 @@ Copy-number variants (CNVs) are linked to a spectrum of outcomes, ranging from s
 
 Each folder contains the script to execute the following analyses:
 
-- **01_construct_PGS:** Contains the pipeline to split samples into a training and testing set (`01_sample_split`). The training set is used to run genome-wide association studies (`02_GWAS`), whose summary statistics were used to develop polygenic scores (`03_PGS_development`). Finally, PGS weights were applied to the testing set and PGS performance was assessed (`04_PGS_application`).
+- **00_phenotypes:** Contains scripts for phenotype extraction (`01_pheno_extraction`) and transformation (`02_pheno_transformation`), including inverse normal transformation (INT) and covariate correction.  
+
+- **01_construct_PGS:** Contains the pipeline to split samples into a training and testing set (`01_sample_split`). The training set is used to run genome-wide association studies (`02_GWAS`), whose summary statistics were used to develop genome-wide or partial (cis/trans) polygenic scores in the test set (`03_PGS_development`). Finally, PGS performance was assessed (`04_PGS_application`).
 
 - **02_model_phenotype:** Contains the scripts to model the individual, joint, and synergistic contribution of CNVs and PGS to phenotypic variability (`01_CNV`), as well as the contribution of the CNV (`02_CNV_burden`) and the pLoF (`03_pLoF`) burden to phenotypic variability.
   
-- **03_model_PGS:** Contains the scripts to model the contribution of CNVs and other rare variants to variability in the genome-wide PGS (`01_PGS_GW`) and partial PGSs (`02_PGS_partial`). The former folder is further subdivided to assess the role of individual CNVs (`01_CNV`), the CNV burden (`02_CNV_burden`), and the pLoF burden (`03_pLoF`) to variability in PGS<sub>GW</sub>.   
+- **03_model_PGS:** Contains the scripts to model the contribution of CNVs and other rare variants to variability in the genome-wide PGS (`01_PGS_GW`) and partial PGSs (`02_PGS_partial`). The former folder is further subdivided to assess the role of individual CNVs (`01_CNV`), the CNV burden (`02_CNV_burden`), and the pLoF burden (`03_pLoF`) to variability in PGS<sub>GW</sub>. 
 
-- **04_model_assortative_mating:** Contains the scripts to measure within-couple same-trait and cross-trait correlations (on the full white British set and on the test set) (`01_trait_correlation`), and the assortative mating modelling for CNV-trait pairs and CNV burden (including and excluding couples from the estimation of alpha (CNV-phenotype correlation), gamma (PGS-phenotype correlation) and the total CNV-PGS correlation) (`02_AM_model`).
-
-- **05_inheritance_rate:** Contains the scripts to infer deletion and duplication inheritance rates from IBD and CNV sharing (`01_CNV_inheritance`).
+- **04_model_assortative_mating:** Contains the scripts to measure within-couple same-trait and cross-trait correlations (on the full white British set and on the test set) (`01_trait_correlation`), and the assortative mating modelling for CNV-trait pairs and CNV burden (including all sensitivity analyses and the null-distribution for each coefficient) (`02_AM_model`).
+i
+- **05_power_analyses:** Contains the scripts to infer the power to detect CNV-PGS interactions (`01_CNV_PGS`) or CNV burden - pLoF burden correlations (`02_CNVburden_LoFburden`).
 
 
 ## Data availability: 
