@@ -73,5 +73,5 @@ assert(sub_anno_maf[sub_anno_maf['variantID'].duplicated(keep=False)].sort_value
 # Create scorefile per chromosome
 for chr_num in chr_list:
     chr_df = sub_anno_maf.query('CHR==@chr_num')
-    chr_df[['variantID', 'ALT', 'weight']].to_csv('../data/24_scorefiles_perCHR_MAF0.01/chr'+str(chr_num)+'.'+pathogenicity+'.genebass_snpeff.correct.txt', sep=' ', header=False, index=False)
+    chr_df[['variantID', 'ALT', 'weight']].to_csv('../data/scorefiles_perCHR_MAF0.01/chr'+str(chr_num)+'.'+pathogenicity+'.genebass_snpeff.txt', sep=' ', header=False, index=False)
 
