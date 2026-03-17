@@ -6,12 +6,6 @@
 import pandas as pd
 
 ################################################################################
-# Parameters
-################################################################################
-MAF_threshold = 0.01
-pathogenicity = "pLoF" 
-
-################################################################################
 # STEP 1: Load data
 ################################################################################
 
@@ -56,7 +50,7 @@ anno_maf.to_csv('/project/data/Genebass_SnpEff_variant_annotations.with_MAF_unre
 ################################################################################
 
 # Filter for variants within the AAF threshold (since pathogenicity refers to ALT allele) and pLoF annotated
-sub_anno_maf = anno_maf.query('(AAF_wb < @MAF_threshold) & (annotation_genebass == "pLoF") & (annotation_snpeff == "LoF" | annotation_snpeff.isna())')
+sub_anno_maf = anno_maf.query('(AAF_wb < 0.01) & (annotation_genebass == "pLoF") & (annotation_snpeff == "LoF" | annotation_snpeff.isna())')
 
 # get CHR and ALT allele
 sub_anno_maf["CHR"] = sub_anno_maf["variantID"].str.split(":").str.get(0)
@@ -73,5 +67,5 @@ assert(sub_anno_maf[sub_anno_maf['variantID'].duplicated(keep=False)].sort_value
 # Create scorefile per chromosome
 for chr_num in chr_list:
     chr_df = sub_anno_maf.query('CHR==@chr_num')
-    chr_df[['variantID', 'ALT', 'weight']].to_csv('../data/scorefiles_perCHR_MAF0.01/chr'+str(chr_num)+'.'+pathogenicity+'.genebass_snpeff.txt', sep=' ', header=False, index=False)
+    chr_df[['variantID', 'ALT', 'weight']].to_csv('../data/scorefiles_perCHR_MAF0.01/chr'+str(chr_num)+'.pLoF.genebass_snpeff.txt', sep=' ', header=False, index=False)
 
