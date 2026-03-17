@@ -38,7 +38,6 @@ maf_wb = pd.read_csv("/project/data/SNP_MAF_AAF.all_variants.nonrelated_whitebri
 maf_wb.rename(columns={'ID': 'variantID'}, inplace=True)
 maf_wb.rename(columns={'AAF': 'AAF_wb'}, inplace=True)
 maf_wb.rename(columns={'MAF': 'MAF_wb'}, inplace=True)
-maf_wb.head()
 
 # 5. Merge annotation of patogenicity with MAF annotation. Only keep variants with annotation (left merge)
 anno_maf = pd.merge(combined, maf_wb[['variantID', 'REF', 'ALT', 'AAF_wb', 'MAF_wb', 'obs_allele_count']], on=["variantID"], how="left")
