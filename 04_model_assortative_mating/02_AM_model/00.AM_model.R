@@ -28,7 +28,7 @@ for (pkg in packages) {
 lapply(packages, FUN=library, character.only = TRUE)
 
 project_DIR <- "/mnt/project/"
-mode <- "base" # base, couple_exclusion, sex_interact, location_coord, winners_curse
+mode <- "base" # base, couple_exclusion, sex_interact, location_coord, winners_curse, 16_PCs, LOCO_PGS
 
 ################################################################################
 # Functions 
@@ -91,7 +91,11 @@ CNVR$CNVR_START <- as.integer(CNVR$CNVR_START)
 CNVR$CNVR_STOP <- as.integer(CNVR$CNVR_STOP)
 CNVR$TOP_POS <- as.integer(CNVR$TOP_POS)
 CNVR$REGION <- paste(CNVR$CHR, CNVR$CNVR_START, CNVR$CNVR_STOP, sep = "_")
-CNVR$REGION_TRANS <- paste(CNVR$CHR, CNVR$CNVR_START-250000, CNVR$CNVR_STOP+250000, sep = "_")
+if (mode=="LOCO_PGS"){
+    CNVR$REGION_TRANS <- CNVR$CHR
+} else {
+    CNVR$REGION_TRANS <- paste(CNVR$CHR, CNVR$CNVR_START-250000, CNVR$CNVR_STOP+250000, sep = "_")
+}
 
 # Order by phenotype
 CNVR <- CNVR[order(CNVR$PHENO, CNVR$CHR, CNVR$CNVR_START), ]
@@ -117,9 +121,14 @@ if (mode=="location_coord"){
    pheno_pgs_cnv_path <- "/data/pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.pheno_location_correction.csv"
 } else if (mode=="sex_interact"){
     pheno_pgs_cnv_path <- "/data/pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.pheno_sex_correction.csv"
-} else {
+}  else if (mode=="16_PCs"){
+    pheno_pgs_cnv_path <- "/data/pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.with_16PCs.csv"
+} else if (mode=="LOCO_PGS"){
+    pheno_pgs_cnv_path <- "/data/pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.LOCO.csv"
+} else if (mode=="base"){
    pheno_pgs_cnv_path <- "/data/pheno_pgs_cnv.autosomes.non_sex_specific.pgs_trans.csv"
 }
+
 pheno_pgs_cnvburden_path <- "/data/pheno_pgs_cnv.autosomes.non_sex_specific.csv"
 
 pheno_pgs_cnv <- as.data.frame(fread(file = file.path(project_DIR, pheno_pgs_cnv_path)))
