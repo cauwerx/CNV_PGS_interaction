@@ -31,6 +31,7 @@ Each folder contains the script to execute the following analyses:
 
 - **05_power_analyses:** Contains the scripts to infer the power to detect CNV-PGS interactions (`01_CNV_PGS`) or CNV burden - pLoF burden correlations (`02_CNVburden_LoFburden`).
 
+- **06_supplementary:** Contains the scripts for all analyses in the Supplementary Notes.
 
 ## Data availability: 
 
