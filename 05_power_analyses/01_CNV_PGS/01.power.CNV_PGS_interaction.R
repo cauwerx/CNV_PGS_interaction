@@ -9,6 +9,7 @@ library(ggplot2)
 # Parameteres
 ################################################################################
 
+set.seed(82)
 m = 1000         # repetitions
 n = 96716        # sample size
 alpha = 0.05/119 # significance
